@@ -1,0 +1,24 @@
+{
+    "name": "giordanolima/eloquent-repository",
+    "description": "Repository pattern for Eloquent ORM with focus in cache.",
+    "keywords": ["laravel", "eloquent", "repository"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Giordano de Andrades Lima",
+            "email": "giordanol@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/config": "^5.1",
+        "illuminate/database": "^5.1",
+        "illuminate/support": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "GiordanoLima\\EloquentRepository": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
