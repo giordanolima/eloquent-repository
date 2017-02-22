@@ -45,7 +45,9 @@ trait CacheableRepository {
     }
     
     public function count() {
-        $this->model = $this->model->getQuery()->setBindings([], "select");
+        if(in_array("getQuery", get_class_methods($this->model)))
+            $this->model = $this->model->getQuery();
+        $this->model = $this->model->setBindings([], "select");
         $this->model->aggregate = [
             "function" => "count",
             "columns" => ["*"]
