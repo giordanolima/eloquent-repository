@@ -102,7 +102,7 @@ abstract class BaseRepository {
             }
         }
         
-        $this->skipOrderBy = true;
+        $this->skipOrderBy();
         return $this;
     }
 
@@ -128,6 +128,7 @@ abstract class BaseRepository {
                 $r = call_user_func_array([$this->model, $method], $parameters);
                 $this->resetQuery();
                 $this->skipGlobalScope = false;
+                $this->skipOrderBy = false;
                 return $r;
             }
 
@@ -158,6 +159,11 @@ abstract class BaseRepository {
     
     protected function skipGlobalScope() {
         $this->skipGlobalScope = true;
+        return $this;
+    }
+    
+    protected function skipOrderBy() {
+        $this->skipOrderBy = true;
         return $this;
     }
 }
