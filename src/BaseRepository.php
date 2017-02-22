@@ -24,6 +24,7 @@ abstract class BaseRepository {
 
     public $debug = false;
     private $skipGlobalScope = false;
+    private $skipOrderBy = false;
 
     private $model_get_methods = [
         "get", 
@@ -101,6 +102,7 @@ abstract class BaseRepository {
             }
         }
         
+        $this->skipOrderBy = true;
         return $this;
     }
 
@@ -118,7 +120,7 @@ abstract class BaseRepository {
 
             if (in_array($method, $this->model_get_methods)) {
                 
-                if(!is_null($this->orderBy)){
+                if(!$this->skipOrderBy && !is_null($this->orderBy)){
                     $this->model = $this->model->orderBy($this->orderBy, $this->orderByDirection);      
                 }
                 if(!$this->skipGlobalScope)
