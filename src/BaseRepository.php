@@ -38,7 +38,6 @@ abstract class BaseRepository {
         "firstOrCreate", 
         "firstOrFail", 
         "updateOrCreate", 
-        "create", 
         "update", 
         "save", 
         "delete",
@@ -111,6 +110,14 @@ abstract class BaseRepository {
         $this->model->whereIn(app()->make($this->model())->getKeyName(), $ids)->delete();
     }
     
+    public function create(array $attributes = []) {
+        $r = $this->newQuery()->model->create($attributes);
+        $this->skipGlobalScope = false;
+        $this->skipOrderBy = false;
+        $this->resetQuery();
+        return $r;
+    }
+    
     public function __call($method, $parameters) {
         if (
                 in_array($method, get_class_methods($this->model())) 
@@ -145,12 +152,13 @@ abstract class BaseRepository {
      * @return \Ensino\Repositories\Base\BaseRepository
      */
     public function newQuery() {
-         $this->resetQuery();
+        $this->resetQuery();
         return $this;
     }
     
     protected function resetQuery() {
         $this->model = $this->app->make($this->model());
+        return $this;
     }
 
     protected function globalScope() {
