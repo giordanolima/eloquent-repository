@@ -178,7 +178,7 @@ class AdminRepository extends BaseRepository
     }
     
     public function getAll() {
-        Neste consulta não será incluído o escopo global declarado.
+        // Neste consulta não será incluído o escopo global declarado.
         return $this->skipGlobalScope()->all();
     }
 }
