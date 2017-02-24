@@ -18,7 +18,7 @@ abstract class BaseRepository {
      */
     protected $app;
     
-    protected $perPage;
+    protected $perPage = null;
     protected $orderBy = null;
     protected $orderByDirection = "ASC";
 
@@ -55,7 +55,8 @@ abstract class BaseRepository {
      */
     public function __construct(Application $app) {
         $this->app = $app;
-        $this->perPage = config("repository.per_page", 15);
+        if(!$this->perPage)
+            $this->perPage = config("repository.per_page", 15);
         $this->resetQuery();
     }
 
