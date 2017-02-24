@@ -1,5 +1,9 @@
 # Eloquent Repository
+[![Latest Stable Version](https://poser.pugx.org/giordanolima/eloquent-repository/v/stable)](https://packagist.org/packages/giordanolima/eloquent-repository) 
+[![Total Downloads](https://poser.pugx.org/giordanolima/eloquent-repository/downloads)](https://packagist.org/packages/giordanolima/eloquent-repository) 
+[![License](https://poser.pugx.org/giordanolima/eloquent-repository/license)](https://packagist.org/packages/giordanolima/eloquent-repository)
 [![StyleCI](https://styleci.io/repos/82729156/shield?branch=master)](https://styleci.io/repos/82729156)
+
 Pacote para auxiliar na implementação do Repository Pattern utilizando o Eloquent ORM.
 Tem como principal característica a flexibilidade e naturalidade de uso e um poderoso driver para cache de consultas.
 ## Instalação
