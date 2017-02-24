@@ -16,8 +16,8 @@
         "illuminate/support": "^5.1"
     },
     "autoload": {
-        "psr-0": {
-            "GiordanoLima\\EloquentRepository": "src/"
+        "psr-4": {
+            "GiordanoLima\\EloquentRepository\\": "src/"
         }
     }
 }
