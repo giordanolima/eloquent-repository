@@ -4,14 +4,15 @@ namespace GiordanoLima\EloquentRepository;
 
 use Illuminate\Support\ServiceProvider;
 
-class RepositoryServiceProvider extends ServiceProvider {
-
+class RepositoryServiceProvider extends ServiceProvider
+{
     /**
      * Bootstrap the application events.
      *
      * @return void
      */
-    public function boot() {
+    public function boot()
+    {
         $this->handleConfigs();
     }
 
@@ -20,17 +21,17 @@ class RepositoryServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function register() {
-        
+    public function register()
+    {
     }
 
     /**
      * Register the configuration.
      */
-    private function handleConfigs() {
-        $configPath = __DIR__ . '/../config/repository.php';
+    private function handleConfigs()
+    {
+        $configPath = __DIR__.'/../config/repository.php';
         $this->publishes([$configPath => config_path('repository.php')]);
         $this->mergeConfigFrom($configPath, 'repository');
     }
-
 }
