@@ -157,6 +157,9 @@ class UserRepository extends BaseRepository
     
 }
 ```
+#### GlobalScope
+É possível determinar um escopo para ser usado em todas as consultas utilizadas no repositório.
+Caso seja necessário, também é possível ignorar esse escopo global.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
@@ -180,9 +183,6 @@ class AdminRepository extends BaseRepository
     }
 }
 ```
-#### GlobalScope
-É possível determinar um escopo para ser usado em todas as consultas utilizadas no repositório.
-Caso seja necessário, também é possível ignorar esse escopo global.
 ### Cache
 O pacote acompanha um poderoso driver para cache. A ideia é que uma vez realizada a consulta, esta seja armazenado em cache. Após o cache ser feito, é possível reduzir a zero número de acessos ao banco de dados.
 Para utilizar o driver, basta extender a trait que implementa.
