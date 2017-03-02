@@ -192,10 +192,11 @@ abstract class BaseRepository
 
         return $this;
     }
-    
-    private function checkMethod($method) {
+
+    private function checkMethod($method)
+    {
         return in_array($method, $this->model_get_methods)
-             || in_array($method, get_class_methods($this->model())) 
+             || in_array($method, get_class_methods($this->model()))
              || in_array($method, $this->model_dinamic_methods)
              || in_array($method, get_class_methods($this->model->newQuery()))
              || in_array($method, get_class_methods($this->model->newQuery()->getQuery()))
