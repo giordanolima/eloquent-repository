@@ -130,11 +130,7 @@ abstract class BaseRepository
 
     public function __call($method, $parameters)
     {
-        if (
-                in_array($method, get_class_methods($this->model()))
-             || in_array($method, $this->model_dinamic_methods)
-             || in_array($method, get_class_methods($this->model->newQuery()))
-             || in_array($method, get_class_methods($this->model->newQuery()->getQuery()))) {
+        if ($this->checkMethod($method)) {
             if (in_array($method, $this->model_get_methods)) {
                 if (!$this->skipOrderBy && !is_null($this->orderBy)) {
                     $this->model = $this->model->orderBy($this->orderBy, $this->orderByDirection);
@@ -195,5 +191,14 @@ abstract class BaseRepository
         $this->skipOrderBy = true;
 
         return $this;
+    }
+    
+    private function checkMethod($method) {
+        return in_array($method, $this->model_get_methods)
+             || in_array($method, get_class_methods($this->model())) 
+             || in_array($method, $this->model_dinamic_methods)
+             || in_array($method, get_class_methods($this->model->newQuery()))
+             || in_array($method, get_class_methods($this->model->newQuery()->getQuery()))
+             || ($this->model instanceof \Illuminate\Database\Eloquent\Relations\Relation && in_array($method, get_class_methods($this->model->getBaseQuery())));
     }
 }
