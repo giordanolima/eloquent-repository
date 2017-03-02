@@ -113,6 +113,7 @@ trait CacheableRepository
         if (is_null($r)) {
             throw (new ModelNotFoundException())->setModel($this->model);
         }
+
         return $r;
     }
 
@@ -141,6 +142,7 @@ trait CacheableRepository
         if (is_null($r)) {
             throw (new ModelNotFoundException())->setModel($this->model);
         }
+
         return $r;
     }
 
