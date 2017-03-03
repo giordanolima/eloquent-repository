@@ -48,7 +48,8 @@ trait CacheableRepository
         }
         $this->model = $this->model->select($columns);
 
-        return $this->defaulReturn('get')->pluck($column, $key);
+        $getKey = str_contains($key, ".") ? collect(explode(".", $key))->last() : $key;
+        return $this->defaulReturn("get")->pluck($column, $getKey);
     }
 
     public function count()
