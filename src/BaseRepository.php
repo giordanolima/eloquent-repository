@@ -77,8 +77,17 @@ abstract class BaseRepository
             $perPage = $this->perPage;
         }
 
+        if (!$this->skipOrderBy && !is_null($this->orderBy)) {
+            $this->model = $this->model->orderBy($this->orderBy, $this->orderByDirection);
+        }
+        if (!$this->skipGlobalScope) {
+            $this->globalScope();
+        }
+
         $r = $this->model->paginate($perPage, $columns);
         $this->resetQuery();
+        $this->skipGlobalScope = false;
+        $this->skipOrderBy = false;
 
         return $r;
     }
