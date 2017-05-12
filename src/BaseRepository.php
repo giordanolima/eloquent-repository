@@ -42,6 +42,10 @@ abstract class BaseRepository
         'delete',
         'destroy',
         'count',
+        'sum',
+        'max',
+        'min',
+        'avg',
         'value',
     ];
 
