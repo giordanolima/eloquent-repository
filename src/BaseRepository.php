@@ -139,6 +139,14 @@ abstract class BaseRepository
         $this->model->whereIn(app()->make($this->model())->getKeyName(), $ids)->delete();
     }
 
+    public function forceDelete($id)
+    {
+        $obj = $this->withTrashed()->find($id);
+        if($obj) {
+            $obj->forceDelete();
+        }
+    }
+    
     public function create(array $attributes = [])
     {
         $r = $this->newQuery()->model->create($attributes);
