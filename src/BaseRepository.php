@@ -47,10 +47,18 @@ abstract class BaseRepository
         'min',
         'avg',
         'value',
+        'restore',
+        'forceDelete',
+        'trashed',
+        'getDeletedAtColumn',
+        'getQualifiedDeletedAtColumn',
+        'isForceDeleting',
     ];
 
     private $model_dinamic_methods = [
         'whereNotNull',
+        'onlyTrashed',
+        'withTrashed',
     ];
 
     /**
