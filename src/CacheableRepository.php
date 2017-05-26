@@ -196,6 +196,22 @@ trait CacheableRepository
         return $r;
     }
 
+    public function restore($id)
+    {
+        $r = parent::restore($id);
+        $this->clearCache();
+
+        return $r;
+    }
+
+    public function forceDelete($id)
+    {
+        $r = parent::forceDelete($id);
+        $this->clearCache();
+
+        return $r;
+    }
+
     public function updateOrCreate(array $attributes, array $values = [])
     {
         $r = parent::updateOrCreate($attributes, $values);
