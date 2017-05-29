@@ -138,6 +138,12 @@ abstract class BaseRepository
         $ids = (array) $id;
         $this->model->whereIn(app()->make($this->model())->getKeyName(), $ids)->delete();
     }
+    
+    public function restore($id)
+    {
+        $r = app()->make($this->model())->withTrashed()->find($id)->restore();
+        return $r;
+    }
 
     public function forceDelete($id)
     {
