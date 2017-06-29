@@ -120,12 +120,7 @@ abstract class BaseRepository
         }
 
         if (!in_array($order, $orders)) {
-            $direction = strtolower($direction) == 'asc' ? 'asc' : 'desc';
-            if ($this->model instanceof Model || in_array('getQuery', get_class_methods($this->model))) {
-                $this->model->getQuery()->{$property}[] = $order;
-            } else {
-                $this->model->{$property}[] = $order;
-            }
+            $this->model = $this->model->orderBy($column, $direction);
         }
 
         $this->skipOrderBy();
