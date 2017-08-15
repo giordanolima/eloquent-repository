@@ -25,6 +25,11 @@ trait CacheableRepository
 
     public function paginate($perPage = null, $columns = ['*'])
     {
+        
+        if($this->skipCache) {
+            return parent::paginate($perPage, $columns);
+        }
+        
         if (is_null($perPage)) {
             $perPage = $this->perPage;
         }
@@ -42,6 +47,11 @@ trait CacheableRepository
 
     public function lists($column, $key = null)
     {
+        
+        if($this->skipCache) {
+            return parent::lists($column, $key);
+        }
+        
         $columns = [$column];
         if ($key) {
             $columns[] = $key;
@@ -55,6 +65,11 @@ trait CacheableRepository
 
     public function count()
     {
+        
+        if($this->skipCache) {
+            return parent::count();
+        }
+        
         if (in_array('getQuery', get_class_methods($this->model))) {
             $this->model = $this->model->getQuery();
         }
@@ -74,6 +89,11 @@ trait CacheableRepository
 
     public function find($id)
     {
+        
+        if($this->skipCache) {
+            return parent::find($id);
+        }
+        
         if (is_array($id)) {
             $this->model = $this->model->whereIn(app()->make($this->model())->getKeyName(), $id);
 
@@ -87,6 +107,11 @@ trait CacheableRepository
 
     public function findOrNew($id)
     {
+        
+        if($this->skipCache) {
+            return parent::findOrNew($id);
+        }
+        
         if (is_array($id)) {
             $this->model = $this->model->whereIn(app()->make($this->model())->getKeyName(), $id);
             $r = $this->defaulReturn('get');
@@ -104,6 +129,11 @@ trait CacheableRepository
 
     public function findOrFail($id)
     {
+        
+        if($this->skipCache) {
+            return parent::findOrFail($id);
+        }
+        
         if (is_array($id)) {
             $this->model = $this->model->whereIn(app()->make($this->model())->getKeyName(), $id);
             $r = $this->defaulReturn('get');
@@ -121,6 +151,10 @@ trait CacheableRepository
 
     public function first()
     {
+        if($this->skipCache) {
+            return parent::first();
+        }
+        
         $this->model = $this->model->take(1);
 
         return $this->defaulReturn('get')->first();
@@ -128,6 +162,11 @@ trait CacheableRepository
 
     public function firstOrNew()
     {
+        
+        if($this->skipCache) {
+            return parent::firstOrNew();
+        }
+        
         $this->model = $this->model->take(1);
         $r = $this->defaulReturn('get')->first();
         if (is_null($r)) {
@@ -139,6 +178,11 @@ trait CacheableRepository
 
     public function firstOrFail()
     {
+        
+        if($this->skipCache) {
+            return parent::firstOrFail();
+        }
+        
         $this->model = $this->model->take(1);
         $r = $this->defaulReturn('get')->first();
         if (is_null($r)) {
@@ -150,6 +194,11 @@ trait CacheableRepository
 
     public function value($column)
     {
+        
+        if($this->skipCache) {
+            return parent::value($column);
+        }
+        
         $this->model = $this->model->select($column.' as returnfield')->take(1);
         $r = $this->defaulReturn('get')->first();
 
@@ -258,6 +307,11 @@ trait CacheableRepository
 
     private function defaulReturn($call)
     {
+        
+        if($this->skipCache) {
+            return parent::$call();
+        }
+        
         if (in_array('getEagerLoads', get_class_methods($this->model()))) {
             $this->eagerLoads = $this->model->getEagerLoads();
         }

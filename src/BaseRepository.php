@@ -20,6 +20,7 @@ abstract class BaseRepository
     protected $perPage;
     protected $orderBy = null;
     protected $orderByDirection = 'ASC';
+    protected $skipCache = false;
 
     public $debug = false;
     private $skipGlobalScope = false;
@@ -219,6 +220,13 @@ abstract class BaseRepository
     protected function skipOrderBy()
     {
         $this->skipOrderBy = true;
+
+        return $this;
+    }
+
+    public function skipCache()
+    {
+        $this->skipCache = true;
 
         return $this;
     }
