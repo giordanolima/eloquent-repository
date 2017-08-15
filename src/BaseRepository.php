@@ -30,6 +30,7 @@ abstract class BaseRepository
         'get',
         'all',
         'lists',
+        'pluck',
         'find',
         'findOrNew',
         'findOrFail',
