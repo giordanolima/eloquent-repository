@@ -113,7 +113,7 @@ abstract class BaseRepository
     {
         $order = compact('column', 'direction');
 
-        if($this->model instanceof \Illuminate\Database\Eloquent\Relations\Relation){
+        if ($this->model instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
             $orders = (array) $this->model->getQuery()->getQuery()->orders;
         } elseif ($this->model instanceof Model || in_array('getQuery', get_class_methods($this->model))) {
             $orders = (array) $this->model->getQuery()->orders;
@@ -135,21 +135,22 @@ abstract class BaseRepository
         $ids = (array) $id;
         $this->model->whereIn(app()->make($this->model())->getKeyName(), $ids)->delete();
     }
-    
+
     public function restore($id)
     {
         $r = app()->make($this->model())->withTrashed()->find($id)->restore();
+
         return $r;
     }
 
     public function forceDelete($id)
     {
         $obj = $this->withTrashed()->find($id);
-        if($obj) {
+        if ($obj) {
             $obj->forceDelete();
         }
     }
-    
+
     public function create(array $attributes = [])
     {
         $r = $this->newQuery()->model->create($attributes);
@@ -184,6 +185,7 @@ abstract class BaseRepository
         }
 
         $className = get_class($this);
+
         throw new \BadMethodCallException("Call to undefined method {$className}::{$method}()");
     }
 
