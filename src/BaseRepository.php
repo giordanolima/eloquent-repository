@@ -113,12 +113,12 @@ abstract class BaseRepository
     {
         $order = compact('column', 'direction');
 
-        if ($this->model instanceof Model || in_array('getQuery', get_class_methods($this->model))) {
+        if($this->model instanceof \Illuminate\Database\Eloquent\Relations\Relation){
+            $orders = (array) $this->model->getQuery()->getQuery()->orders;
+        } elseif ($this->model instanceof Model || in_array('getQuery', get_class_methods($this->model))) {
             $orders = (array) $this->model->getQuery()->orders;
-            $property = $this->model->getQuery()->unions ? 'unionOrders' : 'orders';
         } else {
             $orders = (array) $this->model->orders;
-            $property = $this->model->unions ? 'unionOrders' : 'orders';
         }
 
         if (!in_array($order, $orders)) {
