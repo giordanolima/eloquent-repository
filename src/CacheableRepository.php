@@ -199,7 +199,9 @@ trait CacheableRepository
     public function create(array $attributes = [])
     {
         $r = parent::create($attributes);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -207,7 +209,9 @@ trait CacheableRepository
     public function update(array $attributes = [])
     {
         $r = parent::update($attributes);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -215,7 +219,9 @@ trait CacheableRepository
     public function save(array $options = [])
     {
         $r = parent::save($options);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -223,7 +229,9 @@ trait CacheableRepository
     public function delete()
     {
         $r = parent::delete();
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -231,7 +239,9 @@ trait CacheableRepository
     public function destroy($ids)
     {
         $r = parent::destroy($ids);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -239,7 +249,9 @@ trait CacheableRepository
     public function restore($id)
     {
         $r = parent::restore($id);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -247,7 +259,9 @@ trait CacheableRepository
     public function forceDelete($id)
     {
         $r = parent::forceDelete($id);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -255,7 +269,9 @@ trait CacheableRepository
     public function updateOrCreate(array $attributes, array $values = [])
     {
         $r = parent::updateOrCreate($attributes, $values);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
 
         return $r;
     }
@@ -263,7 +279,9 @@ trait CacheableRepository
     public function attach($id, $relation, $values, array $attributes = [])
     {
         $r = $this->find($id)->{$relation}()->attach($values, $attributes);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
         $this->resetQuery();
 
         return $r;
@@ -272,7 +290,9 @@ trait CacheableRepository
     public function detach($id, $relation, $values, array $attributes = [])
     {
         $r = $this->find($id)->{$relation}()->detach($values, $attributes);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
         $this->resetQuery();
 
         return $r;
@@ -281,7 +301,9 @@ trait CacheableRepository
     public function updateExistingPivot($id, $relation, $related, array $attributes)
     {
         $r = $this->find($id)->{$relation}()->updateExistingPivot($related, $attributes);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
         $this->resetQuery();
 
         return $r;
@@ -290,7 +312,9 @@ trait CacheableRepository
     public function sync($id, $relation, $values)
     {
         $r = $this->find($id)->{$relation}()->sync($values);
-        $this->clearCache();
+        if (!$this->skipCache) {
+            $this->clearCache();
+        }
         $this->resetQuery();
 
         return $r;
