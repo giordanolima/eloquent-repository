@@ -75,7 +75,7 @@ trait CacheableRepository
             'function' => 'count',
             'columns'  => ['*'],
         ];
-        $key = $this->getCacheKey();
+        $key = $this->getCacheKey('class', $this->getSql().'@count');
         $value = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), function () {
             return parent::count();
         });
