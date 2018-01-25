@@ -13,17 +13,29 @@ trait CacheableRepository
     protected $cacheRepository = null;
     private $eagerLoads;
 
-    public function get()
+    protected function get($columns = ['*'])
     {
-        return $this->defaulReturn('get');
+        if ($this->skipCache) {
+            return parent::get($columns);
+        }
+        parent::select($columns);
+        return $this->defaulReturn(function() {
+            return parent::get();
+        });
     }
 
-    public function all()
+    protected function all($columns = ['*'])
     {
-        return $this->defaulReturn('get');
+        if ($this->skipCache) {
+            return parent::all($columns);
+        }
+        parent::select($columns);
+        return $this->defaulReturn(function() {
+            return parent::all();
+        });
     }
 
-    public function paginate($perPage = null, $columns = ['*'])
+    protected function paginate($perPage = null, $columns = ['*'])
     {
         if ($this->skipCache) {
             return parent::paginate($perPage, $columns);
@@ -34,7 +46,7 @@ trait CacheableRepository
         }
 
         $this->eagerLoads = $this->model->getEagerLoads();
-        $key = $this->getCacheKey('class', $this->getSql().'@perPage='.$perPage.'page='.request('page'));
+        $key = $this->getCacheKey('paginate', $this->getSql().'@perPage='.$perPage.'page='.request('page'));
         $value = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), function () use ($perPage, $columns) {
             return parent::paginate($perPage, $columns);
         });
@@ -44,7 +56,7 @@ trait CacheableRepository
         return $value;
     }
 
-    public function lists($column, $key = null)
+    protected function lists($column, $key = null)
     {
         if ($this->skipCache) {
             return parent::lists($column, $key);
@@ -58,10 +70,31 @@ trait CacheableRepository
 
         $getKey = str_contains($key, '.') ? collect(explode('.', $key))->last() : $key;
 
-        return $this->defaulReturn('get')->pluck($column, $getKey);
+        return $this->defaulReturn(function() {
+            return parent::get();
+        })->pluck($column, $getKey);
     }
 
-    public function count()
+    protected function pluck($column, $key = null)
+    {
+        if ($this->skipCache) {
+            return parent::pluck($column, $key);
+        }
+
+        $columns = [$column];
+        if ($key) {
+            $columns[] = $key;
+        }
+        $this->model = $this->model->select($columns);
+
+        $getKey = str_contains($key, '.') ? collect(explode('.', $key))->last() : $key;
+
+        return $this->defaulReturn(function() {
+            return parent::get();
+        })->pluck($column, $getKey);
+    }
+
+    protected function count()
     {
         if ($this->skipCache) {
             return parent::count();
@@ -75,7 +108,7 @@ trait CacheableRepository
             'function' => 'count',
             'columns'  => ['*'],
         ];
-        $key = $this->getCacheKey('class', $this->getSql().'@count');
+        $key = $this->getCacheKey('count');
         $value = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), function () {
             return parent::count();
         });
@@ -84,104 +117,44 @@ trait CacheableRepository
         return $value;
     }
 
-    public function find($id)
+    protected function find($id)
     {
         if ($this->skipCache) {
             return parent::find($id);
         }
-
-        if (is_array($id)) {
-            $this->model = $this->model->whereIn(app()->make($this->model())->getKeyName(), $id);
-
-            return $this->defaulReturn('get');
-        }
-
-        $this->model = $this->model->where(app()->make($this->model())->getKeyName(), $id)->take(1);
-
-        return $this->defaulReturn('get')->first();
+        return $this->defaulReturn(function() use ($id) {
+            return parent::find($id);
+        });
     }
 
-    public function findOrNew($id)
+    protected function findOrNew($id)
     {
         if ($this->skipCache) {
             return parent::findOrNew($id);
         }
-
-        if (is_array($id)) {
-            $this->model = $this->model->whereIn(app()->make($this->model())->getKeyName(), $id);
-            $r = $this->defaulReturn('get');
-        } else {
-            $this->model = $this->model->where(app()->make($this->model())->getKeyName(), $id)->take(1);
-            $r = $this->defaulReturn('get')->first();
-        }
-
-        if (is_null($r)) {
-            return app()->make($this->model());
-        }
-
-        return $r;
+        return $this->defaulReturn(function() use ($id) {
+            return parent::findOrNew($id);
+        });
     }
 
-    public function findOrFail($id)
+    protected function findOrFail($id)
     {
         if ($this->skipCache) {
             return parent::findOrFail($id);
         }
-
-        if (is_array($id)) {
-            $this->model = $this->model->whereIn(app()->make($this->model())->getKeyName(), $id);
-            $r = $this->defaulReturn('get');
-        } else {
-            $this->model = $this->model->where(app()->make($this->model())->getKeyName(), $id)->take(1);
-            $r = $this->defaulReturn('get')->first();
-        }
-
-        if (is_null($r)) {
-            throw (new ModelNotFoundException())->setModel($this->model);
-        }
-
-        return $r;
+        return $this->defaulReturn(function() use ($id) {
+            return parent::findOrFail($id);
+        });
     }
 
-    public function first()
+    protected function first()
     {
         if ($this->skipCache) {
             return parent::first();
         }
-
-        $this->model = $this->model->take(1);
-
-        return $this->defaulReturn('get')->first();
-    }
-
-    public function firstOrNew()
-    {
-        if ($this->skipCache) {
-            return parent::firstOrNew();
-        }
-
-        $this->model = $this->model->take(1);
-        $r = $this->defaulReturn('get')->first();
-        if (is_null($r)) {
-            return app()->make($this->model());
-        }
-
-        return $r;
-    }
-
-    public function firstOrFail()
-    {
-        if ($this->skipCache) {
-            return parent::firstOrFail();
-        }
-
-        $this->model = $this->model->take(1);
-        $r = $this->defaulReturn('get')->first();
-        if (is_null($r)) {
-            throw (new ModelNotFoundException())->setModel($this->model);
-        }
-
-        return $r;
+        return $this->defaulReturn(function() {
+            return parent::first();
+        });
     }
 
     public function value($column)
@@ -320,20 +293,14 @@ trait CacheableRepository
         return $r;
     }
 
-    private function defaulReturn($call)
+    private function defaulReturn($closure)
     {
-        if ($this->skipCache) {
-            return parent::$call();
-        }
-
         if (in_array('getEagerLoads', get_class_methods($this->model()))) {
             $this->eagerLoads = $this->model->getEagerLoads();
         }
 
         $key = $this->getCacheKey();
-        $value = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), function () use ($call) {
-            return parent::$call();
-        });
+        $value = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), $closure);
         $this->resetQuery();
 
         if (in_array('getEagerLoads', get_class_methods($this->model()))) {
@@ -349,7 +316,7 @@ trait CacheableRepository
             if (strpos($name, '.') === false) {
                 foreach ($value as $model) {
                     $relation = $model->$name();
-                    $key = $this->getCacheKey($name, serialize($model));
+                    $key = $this->getCacheKey('relation', serialize($model), $name);
                     $results = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), function () use ($model, $name, $constraints) {
                         return $this->loadRelationship([$model], $name, $constraints);
                     });
@@ -357,7 +324,7 @@ trait CacheableRepository
                 }
             } else {
                 foreach ($value as $model) {
-                    $key = $this->getCacheKey($name, serialize($model));
+                    $key = $this->getCacheKey('relation', serialize($model), $name);
                     $results = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), function () use ($model, $name) {
                         return $model->newCollection(collect($model->load($name)->getRelationValue($name))->toArray());
                     });
@@ -393,13 +360,13 @@ trait CacheableRepository
      *
      * @return string
      */
-    private function getCacheKey($what = 'class', $key = null)
+    private function getCacheKey($method = 'default', $key = null, $what = 'class')
     {
         if (is_null($key)) {
             $key = $this->getSql();
         }
 
-        $key = sprintf('%s--%s', get_called_class().'@'.$what, md5($key));
+        $key = sprintf('%s--%s', get_called_class().'@'.$what."#".$method, md5($key));
         CacheKeys::putKey(get_called_class(), $key);
 
         return $key;
