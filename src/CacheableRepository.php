@@ -3,7 +3,6 @@
 namespace GiordanoLima\EloquentRepository;
 
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait CacheableRepository
 {
@@ -21,7 +20,7 @@ trait CacheableRepository
         parent::select($columns);
         return $this->defaulReturn(function() {
             return parent::get();
-        });
+        }, "get");
     }
 
     protected function all($columns = ['*'])
@@ -32,7 +31,7 @@ trait CacheableRepository
         parent::select($columns);
         return $this->defaulReturn(function() {
             return parent::all();
-        });
+        }, "all");
     }
 
     protected function paginate($perPage = null, $columns = ['*'])
@@ -72,26 +71,12 @@ trait CacheableRepository
 
         return $this->defaulReturn(function() {
             return parent::get();
-        })->pluck($column, $getKey);
+        }, "lists-" . $column."/".$key)->pluck($column, $getKey);
     }
 
     protected function pluck($column, $key = null)
     {
-        if ($this->skipCache) {
-            return parent::pluck($column, $key);
-        }
-
-        $columns = [$column];
-        if ($key) {
-            $columns[] = $key;
-        }
-        $this->model = $this->model->select($columns);
-
-        $getKey = str_contains($key, '.') ? collect(explode('.', $key))->last() : $key;
-
-        return $this->defaulReturn(function() {
-            return parent::get();
-        })->pluck($column, $getKey);
+        return $this->lists($column, $key);
     }
 
     protected function count()
@@ -124,7 +109,7 @@ trait CacheableRepository
         }
         return $this->defaulReturn(function() use ($id) {
             return parent::find($id);
-        });
+        }, "find-" . $id);
     }
 
     protected function findOrNew($id)
@@ -134,7 +119,7 @@ trait CacheableRepository
         }
         return $this->defaulReturn(function() use ($id) {
             return parent::findOrNew($id);
-        });
+        }, "findOrNew-".$id);
     }
 
     protected function findOrFail($id)
@@ -144,7 +129,7 @@ trait CacheableRepository
         }
         return $this->defaulReturn(function() use ($id) {
             return parent::findOrFail($id);
-        });
+        }, "findOrFail" . $id);
     }
 
     protected function first()
@@ -154,7 +139,7 @@ trait CacheableRepository
         }
         return $this->defaulReturn(function() {
             return parent::first();
-        });
+        }, "first");
     }
 
     public function value($column)
@@ -163,38 +148,98 @@ trait CacheableRepository
             return parent::value($column);
         }
 
-        $this->model = $this->model->select($column.' as returnfield')->take(1);
-        $r = $this->defaulReturn('get')->first();
+        return $this->defaulReturn(function() use ($column) {
+            return parent::value($column);
+        }, "value-".$column);
+    }
 
-        return $r ? $r->returnfield : null;
+    public function min($column)
+    {
+        if ($this->skipCache) {
+            return parent::min($column);
+        }
+
+        return $this->defaulReturn(function() use ($column) {
+            return parent::min($column);
+        }, "min-".$column);
+    }
+
+    public function max($column)
+    {
+        if ($this->skipCache) {
+            return parent::max($column);
+        }
+
+        return $this->defaulReturn(function() use ($column) {
+            return parent::max($column);
+        }, "max-".$column);
+    }
+
+    public function sum($column)
+    {
+        if ($this->skipCache) {
+            return parent::sum($column);
+        }
+
+        return $this->defaulReturn(function() use ($column) {
+            return parent::sum($column);
+        }, "sum-".$column);
+    }
+
+    public function avg($column)
+    {
+        if ($this->skipCache) {
+            return parent::avg($column);
+        }
+
+        return $this->defaulReturn(function() use ($column) {
+            return parent::avg($column);
+        }, "avg-".$column);
+    }
+
+    public function average($column)
+    {
+        if ($this->skipCache) {
+            return parent::average($column);
+        }
+
+        return $this->defaulReturn(function() use ($column) {
+            return parent::average($column);
+        }, "average-".$column);
     }
 
     public function create(array $attributes = [])
     {
         $r = parent::create($attributes);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
-
+        $this->clearCache();
         return $r;
     }
 
-    public function update(array $attributes = [])
+    public function insert(array $values)
     {
-        $r = parent::update($attributes);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $r = parent::insert($values);
+        $this->clearCache();
+        return $r;
+    }
 
+    public function insertGetId(array $values)
+    {
+        $r = parent::insertGetId($values);
+        $this->clearCache();
+        return $r;
+    }
+
+    public function update(array $values)
+    {
+        $r = parent::update($values);
+        $this->clearCache();
         return $r;
     }
 
     public function save(array $options = [])
     {
         $r = parent::save($options);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
 
         return $r;
     }
@@ -202,9 +247,7 @@ trait CacheableRepository
     public function delete()
     {
         $r = parent::delete();
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
 
         return $r;
     }
@@ -212,9 +255,7 @@ trait CacheableRepository
     public function destroy($ids)
     {
         $r = parent::destroy($ids);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
 
         return $r;
     }
@@ -222,9 +263,7 @@ trait CacheableRepository
     public function restore($id)
     {
         $r = parent::restore($id);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
 
         return $r;
     }
@@ -232,9 +271,7 @@ trait CacheableRepository
     public function forceDelete($id)
     {
         $r = parent::forceDelete($id);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
 
         return $r;
     }
@@ -242,9 +279,7 @@ trait CacheableRepository
     public function updateOrCreate(array $attributes, array $values = [])
     {
         $r = parent::updateOrCreate($attributes, $values);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
 
         return $r;
     }
@@ -252,9 +287,7 @@ trait CacheableRepository
     public function attach($id, $relation, $values, array $attributes = [])
     {
         $r = $this->find($id)->{$relation}()->attach($values, $attributes);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
         $this->resetQuery();
 
         return $r;
@@ -263,9 +296,7 @@ trait CacheableRepository
     public function detach($id, $relation, $values, array $attributes = [])
     {
         $r = $this->find($id)->{$relation}()->detach($values, $attributes);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
         $this->resetQuery();
 
         return $r;
@@ -274,9 +305,7 @@ trait CacheableRepository
     public function updateExistingPivot($id, $relation, $related, array $attributes)
     {
         $r = $this->find($id)->{$relation}()->updateExistingPivot($related, $attributes);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
         $this->resetQuery();
 
         return $r;
@@ -285,21 +314,19 @@ trait CacheableRepository
     public function sync($id, $relation, $values)
     {
         $r = $this->find($id)->{$relation}()->sync($values);
-        if (!$this->skipCache) {
-            $this->clearCache();
-        }
+        $this->clearCache();
         $this->resetQuery();
 
         return $r;
     }
 
-    private function defaulReturn($closure)
+    private function defaulReturn($closure, $method)
     {
         if (in_array('getEagerLoads', get_class_methods($this->model()))) {
             $this->eagerLoads = $this->model->getEagerLoads();
         }
 
-        $key = $this->getCacheKey();
+        $key = $this->getCacheKey($method);
         $value = $this->getCacheRepository()->remember($key, config('repository.cache_time', 360), $closure);
         $this->resetQuery();
 
