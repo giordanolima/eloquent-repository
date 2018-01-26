@@ -18,9 +18,10 @@ trait CacheableRepository
             return parent::get($columns);
         }
         parent::select($columns);
-        return $this->defaulReturn(function() {
+
+        return $this->defaulReturn(function () {
             return parent::get();
-        }, "get");
+        }, 'get');
     }
 
     protected function all($columns = ['*'])
@@ -29,9 +30,10 @@ trait CacheableRepository
             return parent::all($columns);
         }
         parent::select($columns);
-        return $this->defaulReturn(function() {
+
+        return $this->defaulReturn(function () {
             return parent::all();
-        }, "all");
+        }, 'all');
     }
 
     protected function paginate($perPage = null, $columns = ['*'])
@@ -69,9 +71,9 @@ trait CacheableRepository
 
         $getKey = str_contains($key, '.') ? collect(explode('.', $key))->last() : $key;
 
-        return $this->defaulReturn(function() {
+        return $this->defaulReturn(function () {
             return parent::get();
-        }, "lists-" . $column."/".$key)->pluck($column, $getKey);
+        }, 'lists-'.$column.'/'.$key)->pluck($column, $getKey);
     }
 
     protected function pluck($column, $key = null)
@@ -107,9 +109,10 @@ trait CacheableRepository
         if ($this->skipCache) {
             return parent::find($id);
         }
-        return $this->defaulReturn(function() use ($id) {
+
+        return $this->defaulReturn(function () use ($id) {
             return parent::find($id);
-        }, "find-" . $id);
+        }, 'find-'.$id);
     }
 
     protected function findOrNew($id)
@@ -117,9 +120,10 @@ trait CacheableRepository
         if ($this->skipCache) {
             return parent::findOrNew($id);
         }
-        return $this->defaulReturn(function() use ($id) {
+
+        return $this->defaulReturn(function () use ($id) {
             return parent::findOrNew($id);
-        }, "findOrNew-".$id);
+        }, 'findOrNew-'.$id);
     }
 
     protected function findOrFail($id)
@@ -127,9 +131,10 @@ trait CacheableRepository
         if ($this->skipCache) {
             return parent::findOrFail($id);
         }
-        return $this->defaulReturn(function() use ($id) {
+
+        return $this->defaulReturn(function () use ($id) {
             return parent::findOrFail($id);
-        }, "findOrFail" . $id);
+        }, 'findOrFail'.$id);
     }
 
     protected function first()
@@ -137,9 +142,10 @@ trait CacheableRepository
         if ($this->skipCache) {
             return parent::first();
         }
-        return $this->defaulReturn(function() {
+
+        return $this->defaulReturn(function () {
             return parent::first();
-        }, "first");
+        }, 'first');
     }
 
     protected function value($column)
@@ -148,9 +154,9 @@ trait CacheableRepository
             return parent::value($column);
         }
 
-        return $this->defaulReturn(function() use ($column) {
+        return $this->defaulReturn(function () use ($column) {
             return parent::value($column);
-        }, "value-".$column);
+        }, 'value-'.$column);
     }
 
     protected function min($column)
@@ -159,9 +165,9 @@ trait CacheableRepository
             return parent::min($column);
         }
 
-        return $this->defaulReturn(function() use ($column) {
+        return $this->defaulReturn(function () use ($column) {
             return parent::min($column);
-        }, "min-".$column);
+        }, 'min-'.$column);
     }
 
     protected function max($column)
@@ -170,9 +176,9 @@ trait CacheableRepository
             return parent::max($column);
         }
 
-        return $this->defaulReturn(function() use ($column) {
+        return $this->defaulReturn(function () use ($column) {
             return parent::max($column);
-        }, "max-".$column);
+        }, 'max-'.$column);
     }
 
     protected function sum($column)
@@ -181,9 +187,9 @@ trait CacheableRepository
             return parent::sum($column);
         }
 
-        return $this->defaulReturn(function() use ($column) {
+        return $this->defaulReturn(function () use ($column) {
             return parent::sum($column);
-        }, "sum-".$column);
+        }, 'sum-'.$column);
     }
 
     protected function avg($column)
@@ -192,9 +198,9 @@ trait CacheableRepository
             return parent::avg($column);
         }
 
-        return $this->defaulReturn(function() use ($column) {
+        return $this->defaulReturn(function () use ($column) {
             return parent::avg($column);
-        }, "avg-".$column);
+        }, 'avg-'.$column);
     }
 
     protected function average($column)
@@ -203,15 +209,16 @@ trait CacheableRepository
             return parent::average($column);
         }
 
-        return $this->defaulReturn(function() use ($column) {
+        return $this->defaulReturn(function () use ($column) {
             return parent::average($column);
-        }, "average-".$column);
+        }, 'average-'.$column);
     }
 
     protected function create(array $attributes = [])
     {
         $r = parent::create($attributes);
         $this->clearCache();
+
         return $r;
     }
 
@@ -219,6 +226,7 @@ trait CacheableRepository
     {
         $r = parent::insert($values);
         $this->clearCache();
+
         return $r;
     }
 
@@ -226,6 +234,7 @@ trait CacheableRepository
     {
         $r = parent::insertGetId($values);
         $this->clearCache();
+
         return $r;
     }
 
@@ -233,6 +242,7 @@ trait CacheableRepository
     {
         $r = parent::update($values);
         $this->clearCache();
+
         return $r;
     }
 
@@ -393,7 +403,7 @@ trait CacheableRepository
             $key = $this->getSql();
         }
 
-        $key = sprintf('%s--%s', get_called_class().'@'.$what."#".$method, md5($key));
+        $key = sprintf('%s--%s', get_called_class().'@'.$what.'#'.$method, md5($key));
         CacheKeys::putKey(get_called_class(), $key);
 
         return $key;
