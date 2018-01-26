@@ -18,6 +18,8 @@ Para configurar as opções do pacote, declare o Service Provider no arquivo `co
     GiordanoLima\EloquentRepository\RepositoryServiceProvider::class,
 ],
 ```
+> Se você estiver utilizando a versão 5.5 ou superior do Laravel, o Service Provider é automaticamente reconhecido pelo Package Discover.
+
 Para publicar o arquivo de configuração:
 ```shell
 php artisan vendor:publish
@@ -99,16 +101,13 @@ class UserController extends Controller
     }
     
     public function index() {
-        return $this->repository->all();
-    }
-    
-    public function edit($id) {
-        // É possível também utilizar os métodos do Model diretamente no controller.
-        return $this->repository->findOrFail($id);
+        return $this->repository->getAllUsers();
     }
     
 }
 ```
+> Os métodos do Eloquent/Query estão encapsulados como protegido e está disponível dentro da própria classe de repositório. Declare seus métodos públicos de acesso a dados dentro do repositório para acessá-los através do controlador.
+
 #### Paginate
 Como valor padrão, sempre que o método `paginate` é usando, serão listados *15* registros por página. Este valor padrão pode ser definido no arquivo de configuração para ser usado em todos os repositórios.
 Caso seja necessário, é possível alterar o valor padrão para um único repositório, basta sobreescrever a propriedade `perPage` com o valor desejado.
