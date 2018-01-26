@@ -20,33 +20,6 @@ abstract class BaseRepository
     public $debug = false;
     private $skipGlobalScope = false;
     private $skipOrderBy = false;
-
-    private $model_get_methods = [
-        'firstOrNew',
-        'firstOrCreate',
-        'firstOrFail',
-        'updateOrCreate',
-        'save',
-        'delete',
-        'destroy',
-        'sum',
-        'max',
-        'min',
-        'avg',
-        'value',
-        'restore',
-        'forceDelete',
-        'trashed',
-        'getDeletedAtColumn',
-        'getQualifiedDeletedAtColumn',
-        'isForceDeleting',
-    ];
-
-    private $model_dinamic_methods = [
-        'whereNotNull',
-        'onlyTrashed',
-        'withTrashed',
-    ];
     
     /**
      * @param Application $app
@@ -228,6 +201,16 @@ abstract class BaseRepository
     
     protected function whereNotNull($column, $boolean = 'and') {
         $this->model->whereNotNull($column, $boolean);
+        return $this;
+    }
+    
+    protected function onlyTrashed() {
+        $this->model->onlyTrashed();
+        return $this;
+    }
+    
+    protected function withTrashed() {
+        $this->model->withTrashed();
         return $this;
     }
     
