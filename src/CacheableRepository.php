@@ -142,7 +142,7 @@ trait CacheableRepository
         }, "first");
     }
 
-    public function value($column)
+    protected function value($column)
     {
         if ($this->skipCache) {
             return parent::value($column);
@@ -153,7 +153,7 @@ trait CacheableRepository
         }, "value-".$column);
     }
 
-    public function min($column)
+    protected function min($column)
     {
         if ($this->skipCache) {
             return parent::min($column);
@@ -164,7 +164,7 @@ trait CacheableRepository
         }, "min-".$column);
     }
 
-    public function max($column)
+    protected function max($column)
     {
         if ($this->skipCache) {
             return parent::max($column);
@@ -175,7 +175,7 @@ trait CacheableRepository
         }, "max-".$column);
     }
 
-    public function sum($column)
+    protected function sum($column)
     {
         if ($this->skipCache) {
             return parent::sum($column);
@@ -186,7 +186,7 @@ trait CacheableRepository
         }, "sum-".$column);
     }
 
-    public function avg($column)
+    protected function avg($column)
     {
         if ($this->skipCache) {
             return parent::avg($column);
@@ -197,7 +197,7 @@ trait CacheableRepository
         }, "avg-".$column);
     }
 
-    public function average($column)
+    protected function average($column)
     {
         if ($this->skipCache) {
             return parent::average($column);
@@ -208,35 +208,35 @@ trait CacheableRepository
         }, "average-".$column);
     }
 
-    public function create(array $attributes = [])
+    protected function create(array $attributes = [])
     {
         $r = parent::create($attributes);
         $this->clearCache();
         return $r;
     }
 
-    public function insert(array $values)
+    protected function insert(array $values)
     {
         $r = parent::insert($values);
         $this->clearCache();
         return $r;
     }
 
-    public function insertGetId(array $values)
+    protected function insertGetId(array $values)
     {
         $r = parent::insertGetId($values);
         $this->clearCache();
         return $r;
     }
 
-    public function update(array $values)
+    protected function update(array $values)
     {
         $r = parent::update($values);
         $this->clearCache();
         return $r;
     }
 
-    public function save(array $options = [])
+    protected function save(array $options = [])
     {
         $r = parent::save($options);
         $this->clearCache();
@@ -244,7 +244,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function delete()
+    protected function delete()
     {
         $r = parent::delete();
         $this->clearCache();
@@ -252,7 +252,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function destroy($ids)
+    protected function destroy($ids)
     {
         $r = parent::destroy($ids);
         $this->clearCache();
@@ -260,7 +260,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function restore($id)
+    protected function restore($id)
     {
         $r = parent::restore($id);
         $this->clearCache();
@@ -268,15 +268,15 @@ trait CacheableRepository
         return $r;
     }
 
-    public function forceDelete($id)
+    protected function forceDelete()
     {
-        $r = parent::forceDelete($id);
+        $r = parent::forceDelete();
         $this->clearCache();
 
         return $r;
     }
 
-    public function updateOrCreate(array $attributes, array $values = [])
+    protected function updateOrCreate(array $attributes, array $values = [])
     {
         $r = parent::updateOrCreate($attributes, $values);
         $this->clearCache();
@@ -284,7 +284,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function attach($id, $relation, $values, array $attributes = [])
+    protected function attach($id, $relation, $values, array $attributes = [])
     {
         $r = $this->find($id)->{$relation}()->attach($values, $attributes);
         $this->clearCache();
@@ -293,7 +293,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function detach($id, $relation, $values, array $attributes = [])
+    protected function detach($id, $relation, $values, array $attributes = [])
     {
         $r = $this->find($id)->{$relation}()->detach($values, $attributes);
         $this->clearCache();
@@ -302,7 +302,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function updateExistingPivot($id, $relation, $related, array $attributes)
+    protected function updateExistingPivot($id, $relation, $related, array $attributes)
     {
         $r = $this->find($id)->{$relation}()->updateExistingPivot($related, $attributes);
         $this->clearCache();
@@ -311,7 +311,7 @@ trait CacheableRepository
         return $r;
     }
 
-    public function sync($id, $relation, $values)
+    protected function sync($id, $relation, $values)
     {
         $r = $this->find($id)->{$relation}()->sync($values);
         $this->clearCache();
@@ -372,7 +372,7 @@ trait CacheableRepository
         return $results;
     }
 
-    public function clearCache()
+    protected function clearCache()
     {
         $cacheKeys = collect(CacheKeys::loadKeys());
         $cacheKeys = $cacheKeys->flatten();
