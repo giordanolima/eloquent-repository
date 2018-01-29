@@ -4,48 +4,46 @@
 [![License](https://poser.pugx.org/giordanolima/eloquent-repository/license)](https://packagist.org/packages/giordanolima/eloquent-repository)
 [![StyleCI](https://styleci.io/repos/82729156/shield?branch=master)](https://styleci.io/repos/82729156)
 
-[Documentação em português.](README_PT.md)
-
-Package to assist the implementation of the Repository Pattern using Eloquent ORM.
-The main feature is the flexibility and ease of use and a powerful driver for query caching.
-## Installation
-Installing via Composer
+Pacote para auxiliar na implementação do Repository Pattern utilizando o Eloquent ORM.
+Tem como principal característica a flexibilidade e naturalidade de uso e um poderoso driver para cache de consultas.
+## Instalação
+Instalação via Composer
 ```bash
 composer require giordanolima/eloquent-repository
 ```
-To configure the package options, declare the Service Provider in the `config / app.php` file.
+Para configurar as opções do pacote, declare o Service Provider no arquivo `config/app.php`.
 ```php
 'providers' => [
     ...
     GiordanoLima\EloquentRepository\RepositoryServiceProvider::class,
 ],
 ```
-> If you are using version 5.5 or higher of Laravel, the Service Provider is automatically recognized by Package Discover.
+> Se você estiver utilizando a versão 5.5 ou superior do Laravel, o Service Provider é automaticamente reconhecido pelo Package Discover.
 
-To publish the configuration file:
+Para publicar o arquivo de configuração:
 ```shell
 php artisan vendor:publish
 ```
-### Usage
-To get started you need to create your repository class and extend the `BaseRepository` available in the package. You also have to set the *Model* that will be used to perform the queries.
-Example:
+### Uso
+Para começar a usar é necessário criar sua classe de repositório e extender o `BaseRepository` disponível do pacote. Além disso, também é necessário indicar o *Model* que será usado para realizar as consultas.
+Exemplo:
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
 class UserRepository extends BaseRepository
 {
-    protected function model() {
+	protected function model() {
         return \App\User::class;
     }
 }
 ```
-Now it is possible to perform queries in the same way as it is used in Elquent.
+Com essa classe é possível realizar consultas da mesma maneira que é usado no Elquent.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
 class UserRepository extends BaseRepository
 {
-    protected function model() {
+	protected function model() {
         return \App\User::class;
     }
     
@@ -57,12 +55,12 @@ class UserRepository extends BaseRepository
         return $this->where("name", $name)->get();
     }
     
-    // You can create methods with partial queries
+    // É possível criar métodos com consultas parciais
     public function filterByProfile($profile) {
         return $this->where("profile", $profile);
     }
     
-    // Them you can use the partial queries into your repositories
+    // Depois é possível usar as consultas parciais dentro do próprio repositório
     public function getAdmins() {
         return $this->filterByProfile("admin")->get();
     }
@@ -70,13 +68,13 @@ class UserRepository extends BaseRepository
         return $this->filterByProfile("editor")->get();
     }
     
-    // You can also use Eager Loading in queries
+    // Também é possível usar Eager Loading nas consultas
     public function getWithPosts() {
         return $this->with("posts")->get();
     }
 }
 ```
-To use the class, just inject them into the controllers.
+Para usar a classe, basta injetá-las nos controllers.
 ```php
 namespace App\Http\Controllers;
 
@@ -84,12 +82,12 @@ use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 class UserController extends Controller
 {
-    protected function index(UserRepository $repository) {
+	protected function index(UserRepository $repository) {
         return $repository->getAdmins();
     }
 }
 ```
-The injection can also be done in the constructor to use the repository in all methods.
+A injeção também pode ser feita no construtor pra utilizar o repositório em todos os métodos.
 ```php
 namespace App\Http\Controllers;
 
@@ -108,25 +106,27 @@ class UserController extends Controller
     
 }
 ```
-> The Eloquent/QueryBuilder methods are encapsulated as protected and are available just into the repository class. Declare your own public data access methods within the repository to access them through the controller.
+> Os métodos do Eloquent/Query estão encapsulados como protegido e está disponível dentro da própria classe de repositório. Declare seus métodos públicos de acesso a dados dentro do repositório para acessá-los através do controlador.
 
 #### Paginate
-As default value, the `paginate` method uses, *15* records per page. This default value can be set in the configuration file to be used in all repositories.
-If necessary, you can change the default value for a single repository overwriting the `perPage` property with the desired value.
+Como valor padrão, sempre que o método `paginate` é usando, serão listados *15* registros por página. Este valor padrão pode ser definido no arquivo de configuração para ser usado em todos os repositórios.
+Caso seja necessário, é possível alterar o valor padrão para um único repositório, basta sobreescrever a propriedade `perPage` com o valor desejado.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
 class UserRepository extends BaseRepository
 {
+    // Deste modo, sempre que o método paginate for usado neste repositório
+    // serão exibidos somente 10 registros por página.
     protected $perPage = 10;
-    protected function model() {
+	protected function model() {
         return \App\User::class;
     }
 }
 ```
 #### OrderBy
-You can declare a field and a default direction to be used for all queries in a particular repository.
-You can still choose other fields to sort or just skip the sorting methods.
+É possível declarar um campo e uma diração padrão para ser usado em todas as consultas de um determinado repositório.
+Ainda assim é possível escolher outras formas de ordenação, bem como é possível usar nenhum tipo de ordenação.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
@@ -139,26 +139,26 @@ class UserRepository extends BaseRepository
     }
     
     public function getAllUser(){
-        // This query will use the default ordering of the repository.
+        // Neste consulta será usada a ordenação padrão do repositório.
         return $this->all();
     }
     
     public function getByName($name) {
-        // In this query only the declared sort will be used.
+        // Neste consulta será usado somente a ordenação declarada.
         return $this->orderBy("name")->where("name", $name)->get();
     }
     
     // É possível criar métodos com consultas parciais
     public function getWithoutOrder() {
-        // In this query, no sort will be used.
+        // Neste consulta não será usada nenhuma ordenação.
         return $this->skipOrderBy()->all();
     }
     
 }
 ```
 #### GlobalScope
-You can set a scope to use for all queries used in the repository.
-If necessary, you can also ignore this global scope.
+É possível determinar um escopo para ser usado em todas as consultas utilizadas no repositório.
+Caso seja necessário, também é possível ignorar esse escopo global.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
@@ -172,20 +172,20 @@ class AdminRepository extends BaseRepository
     }
     
     public function getAdmins() {
-        // In this query the declared global scope will be included.
+        // Neste consulta será incluído o escopo global declarado.
         return $this->all();
     }
     
     public function getAll() {
-        // In this query the declared global scope will not be included.
+        // Neste consulta não será incluído o escopo global declarado.
         return $this->skipGlobalScope()->all();
     }
 }
 ```
 ## Cache
-The package comes with a powerful cache driver. The idea is that once the query is done, it will be cached. After the cache is done, it is possible to reduce the number of accesses to the database to zero.
-All caching is performed using the cache driver configured for the application.
-To use the driver, just use the trait that implements it.
+O pacote acompanha um poderoso driver para cache. A ideia é que uma vez realizada a consulta, esta seja armazenado em cache. Após o cache ser feito, é possível reduzir a zero número de acessos ao banco de dados.
+Todo o cache é realizado utilizando o driver de cache configurado para a aplicação.
+Para utilizar o driver, basta extender a trait que implementa.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
@@ -193,12 +193,12 @@ use GiordanoLima\EloquentRepository\CacheableRepository;
 class UserRepository extends BaseRepository
 {
     use CacheableRepository;
-    protected function model() {
+	protected function model() {
         return \App\User::class;
     }
 }
 ```
-Usage remains the same, with all cache management logic done automatically.
+O uso continua sendo o mesmo, sendo toda a lógica de gerenciamento de cache feito automaticamente.
 ```php
 namespace App\Http\Controllers;
 
@@ -213,16 +213,16 @@ class UserController extends Controller
     
     public function index() {
         $users = $this->repository->getAllUsers();
-        // if you call the same query later (even in other requests)
-        // the query is already cached and you do not need to access the database again.
+        // caso chame a mesma consulta posteiormente (mesmo em outras requisições)
+        // a consulta já está cacheada e não será necessário acessar o banco de dados novamente.
         $users = $this->repository->getAllUsers(); 
     }
     
 }
 ```
-Everytime the database data is changed, the cache is automatically cleaned to avoid outdated data.
-However, if it is necessary to clear the cache, it can be performed through the `clearCache()` method.
-You can also force access to the database and avoid cached data by using the `skipCache()` method.
+Cada vez que alguma alteração no banco de dados for feita, o cache é automaticamente limpo para evitar retorno de dados desatualizados.
+Porém caso desejar forçar a limpeza do cache, é possível realizá-lo através do método `clearCache()`.
+É possível também forçar o acesso ao banco e evitar os dados em cache utilizando o método `skipCache()`.
 ```php
 namespace App\Repositories;
 use GiordanoLima\EloquentRepository\BaseRepository;
@@ -235,18 +235,18 @@ class UserRepository extends BaseRepository
     }
     
     public function createUser($data) {
-        // After inserting the data, the cache
-        // is cleaned automatically.
+        // Após a inserção dos dados, o cache
+        // é limpo automaticamente.
         return $this->create($data);
     }
     
     public function addRules($user, $rules) {
         $user->rules()->attach($rules);
-        $this->clearCache(); // Forcing cache cleaning.
+        $this->clearCache(); // Forçando a limpeza do cache.
     }
     
     public function getWithoutCache() {
-        $this->skipCache()->all(); // Finding the data without using the cache.
+        $this->skipCache()->all(); // Buscando os dados sem usar o cache.
     }
 }
 ```
