@@ -96,14 +96,14 @@ abstract class BaseRepository
 
     protected function with($relations)
     {
-        $this->model->with($relations);
+        $this->model = $this->model->with($relations);
 
         return $this;
     }
 
     protected function without($relations)
     {
-        $this->model->without($relations);
+        $this->model = $this->model->without($relations);
 
         return $this;
     }
@@ -123,308 +123,308 @@ abstract class BaseRepository
 
     protected function select($columns = ['*'])
     {
-        $this->model->select($columns);
+        $this->model = $this->model->select($columns);
 
         return $this;
     }
 
     protected function addSelect($column)
     {
-        $this->model->addSelect($column);
+        $this->model = $this->model->addSelect($column);
 
         return $this;
     }
 
     protected function distinct()
     {
-        $this->model->distinct();
+        $this->model = $this->model->distinct();
 
         return $this;
     }
 
     protected function join($table, $first, $operator = null, $second = null, $type = 'inner', $where = false)
     {
-        $this->model->join($table, $first, $operator, $second, $type, $where);
+        $this->model = $this->model->join($table, $first, $operator, $second, $type, $where);
 
         return $this;
     }
 
     protected function selectRaw($expression, array $bindings = [])
     {
-        $this->model->selectRaw($expression, $bindings);
+        $this->model = $this->model->selectRaw($expression, $bindings);
 
         return $this;
     }
 
     protected function whereKey($id)
     {
-        $this->model->whereKey($id);
+        $this->model = $this->model->whereKey($id);
 
         return $this;
     }
 
     protected function whereKeyNot($id)
     {
-        $this->model->whereKeyNot($id);
+        $this->model = $this->model->whereKeyNot($id);
 
         return $this;
     }
 
     protected function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        $this->model->where($column, $operator, $value, $boolean);
+        $this->model = $this->model->where($column, $operator, $value, $boolean);
 
         return $this;
     }
 
     protected function orWhere($column, $operator = null, $value = null)
     {
-        $this->model->orWhere($column, $operator, $value);
+        $this->model = $this->model->orWhere($column, $operator, $value);
 
         return $this;
     }
 
     protected function whereRaw($sql, $bindings = [], $boolean = 'and')
     {
-        $this->model->whereRaw($sql, $bindings, $boolean);
+        $this->model = $this->model->whereRaw($sql, $bindings, $boolean);
 
         return $this;
     }
 
     protected function orWhereRaw($sql, $bindings = [])
     {
-        $this->model->orWhereRaw($sql, $bindings);
+        $this->model = $this->model->orWhereRaw($sql, $bindings);
 
         return $this;
     }
 
     protected function whereIn($column, $values, $boolean = 'and', $not = false)
     {
-        $this->model->whereIn($column, $values, $boolean, $not);
+        $this->model = $this->model->whereIn($column, $values, $boolean, $not);
 
         return $this;
     }
 
     protected function orWhereIn($column, $values)
     {
-        $this->model->orWhereIn($column, $values);
+        $this->model = $this->model->orWhereIn($column, $values);
 
         return $this;
     }
 
     protected function whereNotIn($column, $values, $boolean = 'and')
     {
-        $this->model->whereNotIn($column, $values, $boolean);
+        $this->model = $this->model->whereNotIn($column, $values, $boolean);
 
         return $this;
     }
 
     protected function orWhereNotIn($column, $values)
     {
-        $this->model->orWhereNotIn($column, $values);
+        $this->model = $this->model->orWhereNotIn($column, $values);
 
         return $this;
     }
 
     protected function whereNull($column, $boolean = 'and', $not = false)
     {
-        $this->model->whereNull($column, $boolean, $not);
+        $this->model = $this->model->whereNull($column, $boolean, $not);
 
         return $this;
     }
 
     protected function orWhereNull($column)
     {
-        $this->model->orWhereNull($column);
+        $this->model = $this->model->orWhereNull($column);
 
         return $this;
     }
 
     protected function whereNotNull($column, $boolean = 'and')
     {
-        $this->model->whereNotNull($column, $boolean);
+        $this->model = $this->model->whereNotNull($column, $boolean);
 
         return $this;
     }
 
     protected function onlyTrashed()
     {
-        $this->model->onlyTrashed();
+        $this->model = $this->model->onlyTrashed();
 
         return $this;
     }
 
     protected function withTrashed()
     {
-        $this->model->withTrashed();
+        $this->model = $this->model->withTrashed();
 
         return $this;
     }
 
     protected function whereBetween($column, array $values, $boolean = 'and', $not = false)
     {
-        $this->model->whereBetween($column, $values, $boolean, $not);
+        $this->model = $this->model->whereBetween($column, $values, $boolean, $not);
 
         return $this;
     }
 
     protected function orWhereBetween($column, array $values)
     {
-        $this->model->orWhereBetween($column, $values);
+        $this->model = $this->model->orWhereBetween($column, $values);
 
         return $this;
     }
 
     protected function whereNotBetween($column, array $values, $boolean = 'and')
     {
-        $this->model->whereNotBetween($column, $values, $boolean);
+        $this->model = $this->model->whereNotBetween($column, $values, $boolean);
 
         return $this;
     }
 
     protected function orWhereNotBetween($column, array $values)
     {
-        $this->model->orWhereNotBetween($column, $values);
+        $this->model = $this->model->orWhereNotBetween($column, $values);
 
         return $this;
     }
 
     protected function orWhereNotNull($column)
     {
-        $this->model->orWhereNotNull($column);
+        $this->model = $this->model->orWhereNotNull($column);
 
         return $this;
     }
 
     protected function whereDate($column, $operator, $value = null, $boolean = 'and')
     {
-        $this->model->whereDate($column, $operator, $value, $boolean);
+        $this->model = $this->model->whereDate($column, $operator, $value, $boolean);
 
         return $this;
     }
 
     protected function orWhereDate($column, $operator, $value)
     {
-        $this->model->orWhereDate($column, $operator, $value);
+        $this->model = $this->model->orWhereDate($column, $operator, $value);
 
         return $this;
     }
 
     protected function whereTime($column, $operator, $value, $boolean = 'and')
     {
-        $this->model->whereTime($column, $operator, $value, $boolean);
+        $this->model = $this->model->whereTime($column, $operator, $value, $boolean);
 
         return $this;
     }
 
     protected function orWhereTime($column, $operator, $value)
     {
-        $this->model->orWhereTime($column, $operator, $value);
+        $this->model = $this->model->orWhereTime($column, $operator, $value);
 
         return $this;
     }
 
     protected function whereDay($column, $operator, $value = null, $boolean = 'and')
     {
-        $this->model->whereDay($column, $operator, $value, $boolean);
+        $this->model = $this->model->whereDay($column, $operator, $value, $boolean);
 
         return $this;
     }
 
     protected function whereMonth($column, $operator, $value = null, $boolean = 'and')
     {
-        $this->model->whereMonth($column, $operator, $value, $boolean);
+        $this->model = $this->model->whereMonth($column, $operator, $value, $boolean);
 
         return $this;
     }
 
     protected function whereYear($column, $operator, $value = null, $boolean = 'and')
     {
-        $this->model->whereYear($column, $operator, $value = null, $boolean);
+        $this->model = $this->model->whereYear($column, $operator, $value = null, $boolean);
 
         return $this;
     }
 
     protected function groupBy($group)
     {
-        $this->model->groupBy($group);
+        $this->model = $this->model->groupBy($group);
 
         return $this;
     }
 
     protected function having($column, $operator = null, $value = null, $boolean = 'and')
     {
-        $this->model->having($column, $operator, $value, $boolean);
+        $this->model = $this->model->having($column, $operator, $value, $boolean);
 
         return $this;
     }
 
     protected function orHaving($column, $operator = null, $value = null)
     {
-        $this->model->orHaving($column, $operator, $value);
+        $this->model = $this->model->orHaving($column, $operator, $value);
 
         return $this;
     }
 
     protected function havingRaw($sql, array $bindings = [], $boolean = 'and')
     {
-        $this->model->havingRaw($sql, $bindings, $boolean);
+        $this->model = $this->model->havingRaw($sql, $bindings, $boolean);
 
         return $this;
     }
 
     protected function orHavingRaw($sql, array $bindings = [])
     {
-        $this->model->havingRaw($sql, $bindings);
+        $this->model = $this->model->havingRaw($sql, $bindings);
 
         return $this;
     }
 
     protected function latest($column = 'created_at')
     {
-        $this->model->latest($column);
+        $this->model = $this->model->latest($column);
 
         return $this;
     }
 
     protected function oldest($column = 'created_at')
     {
-        $this->model->oldest($column);
+        $this->model = $this->model->oldest($column);
 
         return $this;
     }
 
     protected function orderByRaw($sql, $bindings = [])
     {
-        $this->model->orderByRaw($sql, $bindings);
+        $this->model = $this->model->orderByRaw($sql, $bindings);
 
         return $this;
     }
 
     protected function skip($value)
     {
-        $this->model->skip($value);
+        $this->model = $this->model->skip($value);
 
         return $this;
     }
 
     protected function offset($value)
     {
-        $this->model->offset($value);
+        $this->model = $this->model->offset($value);
 
         return $this;
     }
 
     protected function take($value)
     {
-        $this->model->take($value);
+        $this->model = $this->model->take($value);
 
         return $this;
     }
 
     protected function limit($value)
     {
-        $this->model->limit($value);
+        $this->model = $this->model->limit($value);
 
         return $this;
     }
