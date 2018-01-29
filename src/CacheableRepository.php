@@ -12,14 +12,14 @@ trait CacheableRepository
     protected $cacheRepository = null;
     protected $skipCache = false;
     private $eagerLoads;
-    
+
     public function skipCache()
     {
         $this->skipCache = true;
 
         return $this;
     }
-    
+
     public function clearCache()
     {
         $cacheKeys = collect(CacheKeys::loadKeys());
@@ -29,14 +29,15 @@ trait CacheableRepository
             $this->getCacheRepository()->forget($key);
         }
     }
-    
+
     protected function resetQuery()
     {
         $this->skipCache = false;
         parent::resetQuery();
+
         return $this;
     }
-    
+
     protected function get($columns = ['*'])
     {
         if ($this->skipCache) {
