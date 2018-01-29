@@ -20,6 +20,16 @@ trait CacheableRepository
         return $this;
     }
     
+    public function clearCache()
+    {
+        $cacheKeys = collect(CacheKeys::loadKeys());
+        $cacheKeys = $cacheKeys->flatten();
+
+        foreach ($cacheKeys as $key) {
+            $this->getCacheRepository()->forget($key);
+        }
+    }
+    
     protected function resetQuery()
     {
         $this->skipCache = false;
@@ -395,16 +405,6 @@ trait CacheableRepository
         $results = $relation->getEager();
 
         return $results;
-    }
-
-    protected function clearCache()
-    {
-        $cacheKeys = collect(CacheKeys::loadKeys());
-        $cacheKeys = $cacheKeys->flatten();
-
-        foreach ($cacheKeys as $key) {
-            $this->getCacheRepository()->forget($key);
-        }
     }
 
     /**
