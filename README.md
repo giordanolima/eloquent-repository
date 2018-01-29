@@ -182,8 +182,9 @@ class AdminRepository extends BaseRepository
     }
 }
 ```
-### Cache
+## Cache
 O pacote acompanha um poderoso driver para cache. A ideia é que uma vez realizada a consulta, esta seja armazenado em cache. Após o cache ser feito, é possível reduzir a zero número de acessos ao banco de dados.
+Todo o cache é realizado utilizando o driver de cache configurado para a aplicação.
 Para utilizar o driver, basta extender a trait que implementa.
 ```php
 namespace App\Repositories;
@@ -194,6 +195,58 @@ class UserRepository extends BaseRepository
     use CacheableRepository;
 	protected function model() {
         return \App\User::class;
+    }
+}
+```
+O uso continua sendo o mesmo, sendo toda a lógica de gerenciamento de cache feito automaticamente.
+```php
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
+class UserController extends Controller
+{
+    private $repository;
+	public function __construct()(UserRepository $repository) {
+        $this->repository = $repository;
+    }
+    
+    public function index() {
+        $users = $this->repository->getAllUsers();
+        // caso chame a mesma consulta posteiormente (mesmo em outras requisições)
+        // a consulta já está cacheada e não será necessário acessar o banco de dados novamente.
+        $users = $this->repository->getAllUsers(); 
+    }
+    
+}
+```
+Cada vez que alguma alteração no banco de dados for feita, o cache é automaticamente limpo para evitar retorno de dados desatualizados.
+Porém caso desejar forçar a limpeza do cache, é possível realizá-lo através do método `clearCache()`.
+É possível também forçar o acesso ao banco e evitar os dados em cache utilizando o método `skipCache()`.
+```php
+namespace App\Repositories;
+use GiordanoLima\EloquentRepository\BaseRepository;
+use GiordanoLima\EloquentRepository\CacheableRepository;
+class UserRepository extends BaseRepository
+{
+    use CacheableRepository;
+	protected function model() {
+        return \App\User::class;
+    }
+    
+    public function createUser($data) {
+        // Após a inserção dos dados, o cache
+        // é limpo automaticamente.
+        return $this->create($data);
+    }
+    
+    public function addRules($user, $rules) {
+        $user->rules()->attach($rules);
+        $this->clearCache(); // Forçando a limpeza do cache.
+    }
+    
+    public function getWithoutCache() {
+        $this->skipCache()->all(); // Buscando os dados sem usar o cache.
     }
 }
 ```
