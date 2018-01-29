@@ -10,8 +10,23 @@ trait CacheableRepository
      * @var CacheRepository
      */
     protected $cacheRepository = null;
+    protected $skipCache = false;
     private $eagerLoads;
+    
+    public function skipCache()
+    {
+        $this->skipCache = true;
 
+        return $this;
+    }
+    
+    protected function resetQuery()
+    {
+        $this->skipCache = false;
+        parent::resetQuery();
+        return $this;
+    }
+    
     protected function get($columns = ['*'])
     {
         if ($this->skipCache) {

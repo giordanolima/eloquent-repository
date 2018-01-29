@@ -15,8 +15,7 @@ abstract class BaseRepository
     protected $perPage;
     protected $orderBy = null;
     protected $orderByDirection = 'ASC';
-    protected $skipCache = false;
-
+    
     public $debug = false;
     private $skipGlobalScope = false;
     private $skipOrderBy = false;
