@@ -110,7 +110,7 @@ abstract class BaseRepository
 
     protected function destroy($ids)
     {
-        $this->prepareQuery();
+        $this->resetQuery();
         $r = $this->model->destroy($ids);
         $this->finishQuery();
 
