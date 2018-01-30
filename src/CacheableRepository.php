@@ -370,7 +370,7 @@ trait CacheableRepository
             $this->loadRelationships($value);
         }
 
-        return collect($value);
+        return $value;
     }
 
     private function loadRelationships(&$value)
