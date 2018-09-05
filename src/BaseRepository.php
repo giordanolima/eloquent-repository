@@ -101,6 +101,13 @@ abstract class BaseRepository
         return $this;
     }
 
+    protected function has($relations)
+    {
+        $this->model = $this->model->has($relations);
+
+        return $this;
+    }
+
     protected function without($relations)
     {
         $this->model = $this->model->without($relations);
