@@ -101,9 +101,72 @@ abstract class BaseRepository
         return $this;
     }
 
-    protected function has($relations)
+    protected function has($relations, $operator = '>=', $count = 1, $boolean = 'and', Closure $callback = null)
     {
-        $this->model = $this->model->has($relations);
+        $this->model = $this->model->has($relations, $operator, $count, $boolean, $callback);
+
+        return $this;
+    }
+
+    protected function hasNested($relations, $operator = '>=', $count = 1, $boolean = 'and', Closure $callback = null)
+    {
+        $this->model = $this->model->hasNested($relations, $operator, $count, $boolean, $callback);
+
+        return $this;
+    }
+
+    protected function orHas($relations, $operator = '>=', $count = 1)
+    {
+        $this->model = $this->model->orHas($relations, $operator, $count);
+
+        return $this;
+    }
+
+    protected function doesntHave($relations, $boolean = 'and', Closure $callback = null)
+    {
+        $this->model = $this->model->doesntHave($relations, $boolean, $callback);
+
+        return $this;
+    }
+
+    protected function orDoesntHave($relation)
+    {
+        $this->model = $this->model->orDoesntHave($relation);
+
+        return $this;
+    }
+
+    protected function whereHas($relation, Closure $callback = null, $operator = '>=', $count = 1)
+    {
+        $this->model = $this->model->whereHas($relation, $callback, $operator, $count);
+
+        return $this;
+    }
+
+    protected function orWhereHas($relation, Closure $callback = null, $operator = '>=', $count = 1)
+    {
+        $this->model = $this->model->orWhereHas($relation, $callback, $operator, $count);
+
+        return $this;
+    }
+
+    protected function whereDoesntHave($relation, Closure $callback = null)
+    {
+        $this->model = $this->model->whereDoesntHave($relation, $callback);
+
+        return $this;
+    }
+
+    protected function orWhereDoesntHave($relation, Closure $callback = null)
+    {
+        $this->model = $this->model->orWhereDoesntHave($relation, $callback);
+
+        return $this;
+    }
+
+    protected function withCount($relations)
+    {
+        $this->model = $this->model->withCount($relations);
 
         return $this;
     }
