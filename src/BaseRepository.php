@@ -2,9 +2,9 @@
 
 namespace GiordanoLima\EloquentRepository;
 
+use Closure;
 use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Model;
-use Closure;
 
 abstract class BaseRepository
 {
