@@ -97,7 +97,7 @@ abstract class BaseRepository
 
     protected function with($relations)
     {
-        $this->model = $this->model->with($relations);
+        $this->model = $this->model->with(is_string($relations) ? func_get_args() : $relations);
 
         return $this;
     }
