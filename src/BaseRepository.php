@@ -220,6 +220,13 @@ abstract class BaseRepository
         return $this;
     }
 
+    protected function joinSub($query, $as, $first, $operator = null, $second = null, $type = 'inner', $where = false)
+    {
+        $this->model = $this->model->joinSub($query, $as, $first, $operator = null, $second = null, $type = 'inner', $where = false);
+
+        return $this;
+    }
+
     protected function selectRaw($expression, array $bindings = [])
     {
         $this->model = $this->model->selectRaw($expression, $bindings);
