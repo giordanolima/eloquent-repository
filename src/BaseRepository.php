@@ -56,9 +56,12 @@ abstract class BaseRepository
         return $this;
     }
 
-    protected function resetQuery()
+    protected function resetQuery($model = null)
     {
-        $this->model = $this->app->make($this->model());
+        if(!$model)
+            $model = $this->model();
+            
+        $this->model = $this->app->make($model);
 
         return $this;
     }
