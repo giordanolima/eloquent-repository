@@ -30,10 +30,10 @@ trait CacheableRepository
         }
     }
 
-    protected function resetQuery()
+    protected function resetQuery($model = null)
     {
         $this->skipCache = false;
-        parent::resetQuery();
+        parent::resetQuery($model);
 
         return $this;
     }
