@@ -20,6 +20,7 @@ abstract class BaseRepository
     public $debug = false;
     private $skipGlobalScope = false;
     private $skipOrderBy = false;
+    private $model = false;
 
     /**
      * @param Application $app
@@ -64,6 +65,11 @@ abstract class BaseRepository
         $this->model = $this->app->make($model);
 
         return $this;
+    }
+
+    protected function getQuery()
+    {
+        return $this->model;
     }
 
     protected function globalScope()
