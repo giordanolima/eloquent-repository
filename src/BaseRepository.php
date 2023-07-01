@@ -427,7 +427,7 @@ abstract class BaseRepository
 
     protected function whereYear($column, $operator, $value = null, $boolean = 'and')
     {
-        $this->model = $this->model->whereYear($column, $operator, $value = null, $boolean);
+        $this->model = $this->model->whereYear($column, $operator, $value, $boolean);
 
         return $this;
     }
